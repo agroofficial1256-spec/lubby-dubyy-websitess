@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Period Dashboard 💖</title>
+
+<style>
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #ffd6e8, #ffe6f2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.dashboard {
+    background: white;
+    width: 500px;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    text-align: center;
+}
+
+h1 {
+    color: #ff4d88;
+}
+
+input {
+    padding: 10px;
+    width: 80%;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    margin-top: 10px;
+}
+
+button {
+    background: #ff4d88;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #e6005c;
+}
+
+.result {
+    margin-top: 20px;
+}
+
+.love-box {
+    margin-top: 15px;
+    padding: 15px;
+    background: #fff0f5;
+    border-radius: 15px;
+    color: #cc0066;
+}
+
+.calendar {
+    margin-top: 20px;
+}
+
+.calendar table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.calendar th {
+    padding: 5px;
+    color: #ff4d88;
+}
+
+.calendar td {
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.highlight {
+    background-color: #ff99cc;
+    color: white;
+    font-weight: bold;
+}
+
+.disclaimer {
+    font-size: 11px;
+    margin-top: 15px;
+    color: gray;
+}
+</style>
+</head>
+
+<body>
+
+<div class="dashboard">
+    <h1>Tracker 💖</h1>
+
+    <label>Pichle Period kb Start hue the:</label><br>
+    <input type="date" id="lastDate"><br>
+
+    <button onclick="predict()">Predict 💫</button>
+
+    <div class="result" id="result"></div>
+    <div class="calendar" id="calendar"></div>
+    <div class="love-box" id="loveMessage"></div>
+
+    <div class="disclaimer">
+        * crafted with 💖 by Anish *
+    </div>
+</div>
+
+<script>
+const previousStartDates = [
+    "2024-11-27",
+    "2024-12-27",
+    "2025-01-24",
+    "2025-02-24"
+];
+
+function calculateAverageCycle(dates) {
+    let totalGap = 0;
+    for (let i = 1; i < dates.length; i++) {
+        const d1 = new Date(dates[i - 1]);
+        const d2 = new Date(dates[i]);
+        totalGap += (d2 - d1) / (1000 * 60 * 60 * 24);
+    }
+    return Math.round(totalGap / (dates.length - 1));
+}
+
+const averageCycle = calculateAverageCycle(previousStartDates);
+
+function predict() {
+    const lastInput = document.getElementById("lastDate").value;
+    if (!lastInput) {
+        alert("Please select date, my bacha 😌");
+        return;
+    }
+
+    const lastDate = new Date(lastInput);
+    let predictedDates = [];
+
+    for (let i = 1; i <= 3; i++) {
+        let next = new Date(lastDate);
+        next.setDate(next.getDate() + averageCycle * i);
+        predictedDates.push(new Date(next));
+    }
+
+    document.getElementById("result").innerHTML =
+        `<b>Next Predictions:</b><br>
+        ${predictedDates.map(d => d.toDateString()).join("<br>")}`;
+
+    generateCalendar(predictedDates);
+    showLoveMessage();
+}
+
+function generateCalendar(highlightDates) {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    let table = "<table><tr>";
+    const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    days.forEach(day => table += `<th>${day}</th>`);
+    table += "</tr><tr>";
+
+    for (let i = 0; i < firstDay; i++) {
+        table += "<td></td>";
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+        let currentDate = new Date(year, month, day);
+        let highlight = highlightDates.some(d =>
+            d.getFullYear() === currentDate.getFullYear() &&
+            d.getMonth() === currentDate.getMonth() &&
+            d.getDate() === currentDate.getDate()
+        );
+
+        table += `<td class="${highlight ? 'highlight' : ''}">${day}</td>`;
+
+        if ((day + firstDay) % 7 === 0) {
+            table += "</tr><tr>";
+        }
+    }
+
+    table += "</tr></table>";
+    document.getElementById("calendar").innerHTML = table;
+}
+
+function showLoveMessage() {
+    const messages = [
+        ", my bacha 💖 prediction aa gaya… mera bubu strong hai.",
+        " , mera bubu 🌸 rest zaroor lena my bacha.",
+        "my bacha 🥺 tension free rehna, mera bubu.",
+        "Mera bubu  💕 chocolate ready rakho my bacha.",
+        " ❤️ health first always, my bacha.",
+      "baby ji rest zruri baki toh m sath hi huu"
+    ];
+
+    const randomIndex = Math.floor(Math.random() * messages.length);
+    document.getElementById("loveMessage").innerText = messages[randomIndex];
+}
+</script>
+
+</body>
+</html>

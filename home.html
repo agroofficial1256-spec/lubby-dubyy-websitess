@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shaish</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    overflow-x: hidden;
+    color: white;
+    text-align: center;
+}
+
+.mountain-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: url('img 1.jpg') no-repeat center center/cover;
+    filter: blur(1px);
+    z-index: -2;
+}
+
+/* Pink Overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(to bottom, rgba(255,192,203,0.6), rgba(255,105,180,0.6));
+    z-index: -1;
+}
+
+#password-screen {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#password-screen input {
+    padding: 10px;
+    font-size: 18px;
+    border-radius: 8px;
+    border: none;
+    margin-top: 15px;
+}
+
+#password-screen button {
+    margin-top: 10px;
+    padding: 8px 20px;
+    border: none;
+    background: white;
+    color: magenta;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+#main-content {
+    display: none;
+    padding: 5px 5px;
+}
+
+h1 {
+    font-size: 42px;
+    margin-bottom: 20px;
+}
+
+.btn-grad {
+  background-image: linear-gradient(to right, #DC2424 0%, #4A569D 51%, #DC2424 100%);
+}
+
+.btn-grad {
+  background-image: linear-gradient(to right, #EDE574 0%, #E1F5C4 51%, #EDE574 100%);
+}
+
+/* toggle button style */
+.mode-btn{
+position:fixed;
+top:15px;
+right:15px;
+padding:6px 12px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+background:#222;
+color:white;
+font-size:13px;
+z-index:999;
+}
+
+/* night mode */
+body.dark{
+background:#121212;
+color:#f1f1f1;
+}
+
+/* buttons in night mode */
+body.dark .btn-grad{
+filter:brightness(0.9);
+}
+
+.btn-grad {
+  margin: 10px;
+  padding: 15px 45px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  display: block;
+  outline: none;
+  border: none;
+}
+
+.btn-grad:hover {
+  background-position: right center;
+  color: #fff;
+  text-decoration: none;
+}
+
+.section {
+    margin-top: 60px;
+    padding: 30px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    backdrop-filter: blur(6px);
+}
+
+.glass-card{
+background: rgba(255,255,255,0.08);
+border-radius:16px;
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
+border:1px solid rgba(255,255,255,0.15);
+box-shadow:0 8px 32px rgba(0,0,0,0.3);
+padding:20px;
+}
+
+/* night mode glass */
+body.dark .glass-card{
+background: rgba(20,20,20,0.45);
+border:1px solid rgba(255,255,255,0.08);
+}
+
+
+body.dark::before{
+content:"";
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.55);
+pointer-events:none;
+z-index:-1;
+}
+
+.details {
+    margin-top: 40px;
+    font-size: 20px;
+    line-height: 1.8;
+}
+
+/* Countdown */
+.countdown-box {
+    margin-top: 60px;
+    padding: 30px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    font-size: 24px;
+}
+
+
+.heart {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    background: red;
+    transform: rotate(45deg);
+    animation: floatUp 8s linear infinite;
+    z-index: 0;
+}
+
+.heart::before,
+.heart::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: red;
+    border-radius: 50%;
+}
+
+.heart::before { top: -10px; left: 0; }
+.heart::after { left: -10px; top: 0; }
+
+@keyframes floatUp {
+    0% { transform: translateY(100vh) rotate(45deg); opacity: 1; }
+    100% { transform: translateY(-10vh) rotate(45deg); opacity: 0; }
+}
+
+.photo-gallery {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.photo-gallery img {
+    width: 250px;
+    border-radius: 15px;
+}
+
+.bounce {
+    animation: bounce ease 2s 3; 
+    display: inline-block;
+}
+
+@keyframes bounce {
+    
+    0% {
+        transform: scale(1, 1) translateY(0);
+    }
+    10% {
+        transform: scale(1.2, 0.8) translateY(0); 
+    }
+    30% {
+        transform: scale(1, 1) translateY(-6rem); 
+    }
+    50% {
+        transform: scale(1, 1) translateY(0); 
+    }
+}
+
+
+
+
+.component {
+    margin-top: 5px;
+    padding: 10px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    backdrop-filter: blur(9px);
+
+    /* NEW: make children align horizontally */
+
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center; /* optional */
+}
+
+
+
+.button-grad
+
+
+ {
+  margin: 0;    
+  padding: 8px 16px;    
+  font-size: 14px; 
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.3s;
+  background-size: 200% auto;
+  color: white;
+  box-shadow: 0 0 10px red; /* fixed invalid #red */
+  border-radius: 8px;
+  display: inline-block; /* horizontal layout */
+  outline: none;
+  border: none;
+  cursor: pointer;
+
+  flex: 1 1 auto; 
+  min-width: 120px; 
+}
+
+@media (max-width: 480px) {
+  .button-grad {
+    flex: 1 1 100%; 
+
+  }
+}
+
+.button-grad:hover {
+  background-position: right center;
+  color: magenta;
+  text-decoration: none;
+}
+
+.footer-text {
+  width: 100%;
+  display: block;
+  text-align: center;
+
+  color: #fff;
+  background: linear-gradient(
+    90deg,
+    rgba(10,20,40,0.8),
+    rgba(255,140,80,0.3),
+    rgba(30,60,100,0.7)
+  );
+
+  backdrop-filter: blur(12px);
+  padding: 4px 0;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+
+</style>
+</head>
+
+<body>
+<header>
+    <h3>
+    <span class="bounce">💕</span>
+</h3>
+
+
+
+<button id="modeToggle" class="mode-btn">🌙 Night</button>
+</header>
+
+
+<div class="mountain-bg"></div>
+<div class="overlay"></div>
+
+
+ 
+<div id="password-screen">
+  <h2>
+CODE </h2>
+    <input type="password" id="password-input" placeholder="Entering new dimension">
+   <button onclick="checkPassword()">💌</button>
+</div>
+
+
+<br>
+<div id="main-content">
+<center>
+<div class="section btn-grid">
+
+
+<a href='link.html'><button class="component glass-card button-grad"><font color="black">🩸  ?</font></button></a>
+
+<a href='companion.html'><button class="component glass-card button-grad"><font face="Ink Free" color="black">🤗 !</font></button></a>
+
+<a href='realchat.html'><button class="component glass-card button-grad"><font face="arial" color="black">Chatty 💬</font></button></a>
+<br>
+<a href='letter.html'><button class="component glass-card button-grad"><font  face="Ink Free" color="black">Khat🖋️</font></button></a>
+
+<a href='popup.html'><button class="component glass-card button-grad"><font face="Ink Free"  color="magenta">⚠️<sup><font color="red"><b>NEW</b></font></sup></font></i></button></a>
+
+<a href='game.html'><button class="component glass-card button-grad"><font face="Ink Free"  color="magenta">🎮<sup><font color="red"><b>NEW</b></font></sup></font></i></button></a>
+
+</div>
+
+
+
+    <h2> 🐱‍👤</h2> <!--enter your partner's name-->
+</center>
+
+    <div class="section">
+        <h2>🏔 My Mountain Queen</h2>
+        <p>You love mountains — calm yet powerful.</p>
+        <p>Just like your heart.</p>
+    </div>
+<div class="section">
+<h2>⛱️ Beach lover</h2>
+<p>You go with the flow</p>
+ <p>you are special </p>
+</div>
+   <div class="section">
+        <h2>🌹 White Roses</h2>
+        <p>Pure. Elegant. Beautiful.</p>
+        <p>Exactly like you.</p>
+    </div>
+
+    <div class="section">
+        <h2>🍽 My Foodie</h2>
+        <p>Your happiness when food arrives is unmatched.</p>
+        <p>Life tastes better with you.</p>
+    </div>
+
+    <div class="details">
+        🎂 Birthday: 30 January <br> <!--replace with her bday-->
+        ❤️ Together Since: 18 November <br><br>
+       <b> And I would still choose you — every single time.</b>
+    </div>
+
+
+    <div class="countdown-box">
+        🎂 Countdown to Her Next Birthday
+        <div id="countdown" style="margin-top:15px;"></div>
+    </div>
+
+
+
+
+    <!-- Photo Space -->
+
+
+
+    <div class="section">
+        <h2>📸 cuteness in one frame</h2>
+        <div class="photo-gallery">
+            <img src="image 1.png" alt="image 1">
+            <img src="image 2.png" alt="image 2">
+<img src="image 3.png" alt="image 3">
+<img src="image 4.jpeg" width="30%" height="20%" alt="image 4">
+
+
+
+
+        </div>
+<br><a href='main.html'><i>letter from your loved babyy</i></a>
+    </div>
+
+<br>
+<audio src="audio.mp3" controls> <!--replace your audio files-->
+</audio>
+
+<br><br>
+<audio src="audio 2.mp3" controls>
+</audio>
+<p>
+<center>
+<br>
+<details>
+<summary><b><i>Tap here bebo</i></b></summary>
+<div>
+ bhot pyar krta hu tumhe cant lose youu babyyyy !<br>
+<i>warm regards
+~tumhra banda</i>
+
+</div>
+</details>
+</div>
+<p align= "center" class="footer-text">🇨​​🇷​​🇦​​🇫​​🇹​​🇪​​🇩​ ​🇼​​🇮​​🇹​​🇭​ ❤ ​🇦​​🇸​</p>
+
+<hr>
+
+
+
+<script>
+
+
+const toggle=document.getElementById("modeToggle")
+
+toggle.onclick=function(){
+
+document.body.classList.toggle("dark")
+
+if(document.body.classList.contains("dark")){
+toggle.textContent="☀️ Day"
+}else{
+toggle.textContent="🌙 Night"
+}
+
+}
+
+const axm1="300";
+
+const kx91="223";
+const d="30";
+const ez11="3005";
+
+const qwe21="300";
+const rty32="11";
+const uio43="223";
+const pas54="30";
+const dfg65="3005";
+
+const ghj76="300";
+const jkl87="11";
+const zxc98="223";
+const vbn09="30";
+const mnb10="3005";
+
+const poi11="300";
+const lkj12="11";
+const hgf13="223";
+const dsa14="30";
+const tre15="3005";
+
+const yui16="300";
+const opq17="11";
+const b="11";
+const rst18="223";
+const uvw19="30";
+const xyz20="3005";
+
+const a="300";
+
+const k="223";
+
+const e="3005";
+
+const cta21="300";
+const ctb22="11";
+const ctc23="223";
+
+const ctd24="30";
+const cte25="3005";
+
+const fga26="300";
+const fgb27="11";
+const fgc28="223";
+const fgd29="30";
+const fge30="3005";
+
+const hia31="300";
+const hib32="11";
+const hic33="223";
+const hid34="30";
+const hie35="3005";
+
+
+
+function checkPassword()
+ {
+    const password = document.getElementById("password-input").value;
+    if (password === d+b) {
+        document.getElementById("password-screen").style.display = "none";
+        document.getElementById("main-content").style.display = "block";
+    } else {
+        alert("are baby ji password daloo❤️");
+    }
+}
+
+function updateCountdown() {
+    const now = new Date();
+    let nextBirthday = new Date(now.getFullYear(), 0, 30);
+
+    if (now > nextBirthday) {
+        nextBirthday = new Date(now.getFullYear() + 1, 0, 30);
+    }
+
+    const diff = nextBirthday - now;
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    document.getElementById("countdown").innerHTML =
+        days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+}
+
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+
+</script>
+
+</body>
+</html>

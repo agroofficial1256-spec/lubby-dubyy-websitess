@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shagunn Companion 💖</title>
+
+<style>
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #ffd6e8, #ffe6f2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.dashboard {
+    background: white;
+    width: 520px;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    text-align: center;
+}
+
+h1 {
+    color: #ff4d88;
+}
+
+input {
+    padding: 10px;
+    width: 85%;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    margin-top: 15px;
+}
+
+button {
+    background: #ff4d88;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    margin-top: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:disabled {
+    background: gray;
+    cursor: not-allowed;
+}
+
+.love-box {
+    margin-top: 20px;
+    padding: 18px;
+    background: #fff0f5;
+    border-radius: 15px;
+    color: #cc0066;
+    min-height: 60px;
+}
+
+.cooldown {
+    font-size: 12px;
+    color: gray;
+    margin-top: 5px;
+}
+
+.footer {
+    font-size: 11px;
+    margin-top: 20px;
+    color: gray;
+}
+</style>
+</head>
+
+<body>
+
+<div class="dashboard">
+    <h1>💌  Companion</h1>
+
+    <input type="text" id="greetInput" placeholder="Type GOOD MORNING / GOOD EVENING / GOOD NIGHT">
+    <br>
+    <button id="companionBtn" onclick="generateCompanion()">Send 💖</button>
+
+    <div class="cooldown" id="cooldownText"></div>
+    <div class="love-box" id="companionResult"></div>
+
+    <div class="footer">crafted with 💖 by AS</div>
+</div>
+
+<script>
+
+const cooldownHours = 5;
+const companionBtn = document.getElementById("companionBtn");
+const cooldownText = document.getElementById("cooldownText");
+
+// Expanded Lubby Dubby Pools
+const namePool = [
+    "my bacha 💖",
+    "Meri  mera bubu 🌸",
+    "baby ji 🥺",
+    "Mera bubu  💕",
+    "meri jaan 💫",
+    "My cutest😌",
+    "Princess  👑",
+    " meri sunshine ☀️",
+    "Meri pyari 💗",
+    "My soft heart  💞"
+];
+
+const sweetPool = [
+    "smile karna zaroor.",
+    "main hamesha tumhare saath hoon.",
+    "tum meri sabse precious ho.",
+    "apna khayal sabse pehle rakhna.",
+    "stress bilkul nahi lena.",
+    "tumhari hasi meri energy hai.",
+    "tum bina duniya boring hai.",
+    "aaj ka din tumhare naam.",
+    "rest lena important hai.",
+    "mera bubu strong hai.",
+    "tum meri lucky charm ho.",
+    "tumhari awaaz meri therapy hai.",
+    "meri duniya tum ho.",
+    "my bacha always priority."
+];
+
+const endingPool = [
+    "Always remember that ❤️",
+    "Bas itna yaad rakhna 💕",
+    "Ye dil se bol raha hoon 💖",
+    "Sach mein, bilkul sach 💫",
+    "Dil se promise 💗",
+    "Forever wala pyaar 💞",
+    "Tight virtual hug 🤗",
+    "Infinite cuddle mode 🫶"
+];
+
+function generateCompanion() {
+
+    const now = new Date().getTime();
+    const lastUsed = localStorage.getItem("companionCooldown");
+
+    if (lastUsed && now - lastUsed < cooldownHours * 60 * 60 * 1000) {
+        alert("Cooldown active hai my bacha 💕 thoda wait karo.");
+        return;
+    }
+
+    const input = document.getElementById("greetInput").value.trim().toUpperCase();
+    if (!["GOOD MORNING","GOOD EVENING","GOOD NIGHT"].includes(input)) {
+        alert("Sirf GOOD MORNING / GOOD EVENING / GOOD NIGHT likho 😌");
+        return;
+    }
+
+    const message =
+        input + " ❤️ " +
+        namePool[Math.floor(Math.random()*namePool.length)] + ", " +
+        sweetPool[Math.floor(Math.random()*sweetPool.length)] + " " +
+        endingPool[Math.floor(Math.random()*endingPool.length)];
+
+    document.getElementById("companionResult").innerText = message;
+
+    localStorage.setItem("companionCooldown", now);
+    startCooldownTimer();
+}
+
+function startCooldownTimer() {
+    const interval = setInterval(() => {
+        const lastUsed = localStorage.getItem("companionCooldown");
+        if (!lastUsed) return;
+
+        const now = new Date().getTime();
+        const remaining = cooldownHours * 60 * 60 * 1000 - (now - lastUsed);
+
+        if (remaining <= 0) {
+            companionBtn.disabled = false;
+            cooldownText.innerText = "";
+            localStorage.removeItem("companionCooldown");
+            clearInterval(interval);
+        } else {
+            companionBtn.disabled = true;
+            const hrs = Math.floor(remaining / (1000*60*60));
+            const mins = Math.floor((remaining % (1000*60*60)) / (1000*60));
+            cooldownText.innerText = `Cooldown: ${hrs}h ${mins}m remaining`;
+        }
+    }, 1000);
+}
+
+startCooldownTimer();
+
+</script>
+
+</body>
+</html>

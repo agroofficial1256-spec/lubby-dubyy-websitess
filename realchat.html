@@ -1,0 +1,263 @@
+
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<title>chatty 💖</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg,#ffd6e8,#ffe6f2);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
+}
+
+.app {
+    width:420px;
+    background:white;
+    border-radius:18px;
+    padding:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.2);
+    display:flex;
+    flex-direction:column;
+}
+
+h2 {
+    text-align:center;
+    color:#ff4d88;
+    margin-top:0;
+}
+
+.mode-btn{
+position:fixed;
+top:15px;
+right:15px;
+padding:6px 12px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+background:#222;
+color:white;
+font-size:13px;
+z-index:999;
+}
+
+/* night mode */
+body.dark{
+background:#121212;
+color:#f1f1f1;
+}
+
+/* buttons in night mode */
+body.dark .btn-grad{
+filter:brightness(0.9);
+}
+
+#chatBox {
+    flex:1;
+    overflow-y:auto;
+    border:1px solid #eee;
+    border-radius:10px;
+    padding:10px;
+    margin-bottom:10px;
+    background:#fff9fc;
+}
+
+.message {
+    margin-bottom:10px;
+    padding:8px 12px;
+    border-radius:14px;
+    max-width:75%;
+    font-size:14px;
+    word-wrap:break-word;
+}
+
+.mine {
+    background:#ff4d88;
+    color:white;
+    margin-left:auto;
+}
+
+.other {
+    background:#ffe6f2;
+}
+
+input, button {
+    width:100%;
+    padding:10px;
+    margin-top:6px;
+    border-radius:8px;
+    border:1px solid #ddd;
+    font-size:14px;
+}
+
+button {
+    background:#ff4d88;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+
+button:hover {
+    opacity:0.9;
+}
+
+.footer {
+    text-align:center;
+    font-size:11px;
+    margin-top:10px;
+    color:gray;
+}
+
+body {
+  background-image: url("image 5.png");
+  background-repeat: no-repeat;
+  background-size:cover;
+}
+
+.btn-grad {
+  margin: 10px;
+  padding: 15px 45px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  display: block;
+  outline: none;
+  border: none;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="btn-grad">
+<button id="modeToggle" class="btn-grad">🌙 Night</button>
+</div>
+</header>
+
+<div class="app">
+
+<div id="loginSection">
+    <h2>Pvt room*💖</h2>
+    <input type="password" id="passwordInput" placeholder="?">
+    <button onclick="login()">Login</button>
+</div>
+
+<div id="chatSection" style="display:none;">
+    <h2 id="welcomeText"></h2>
+    <div id="chatBox"></div>
+    <input type="text" id="messageInput" placeholder="Type message...">
+    <button onclick="sendMessage()">Bhejo 💌</button>
+</div>
+
+<div class="footer"> 💕</div>
+<br>
+<div class="footer">crafted with 💕 by AS</div>
+
+</div>
+
+<script>
+const toggle=document.getElementById("modeToggle")
+
+toggle.onclick=function(){
+
+document.body.classList.toggle("dark")
+
+if(document.body.classList.contains("dark")){
+toggle.textContent="☀️"
+}else{
+toggle.textContent="🌙 "
+}
+
+}
+
+const firebaseConfig = {
+  apiKey: "xxxxxxxxxxx",   // replace your own API key here
+  authDomain: "xxxxxxxxxxxxxxxx",  // get all these details in config section of firebase
+  databaseURL: "xxxxxxxxxxxxxxxxxxxxx", //database url enter
+  projectId: "xxxxxxxxxxxxxxxxxxx",
+  storageBucket: "xxxxxxxxxxxxxxxxxxxxxxx",
+  messagingSenderId: "xxxxxxxxxxxxxxxxxx",
+  appId: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+let currentUser = "";
+
+
+// Change pwd according to your prefrences
+
+function login() {
+    const pwd = document.getElementById("passwordInput").value.trim();
+
+    if (pwd === "XXXX") {
+        currentUser = "XXXX";
+    } else if (pwd === "ZZZZ") {
+        currentUser = "LLLLL";
+    } else {
+        alert("Wrong password ❌");
+        return;
+    }
+
+    document.getElementById("loginSection").style.display = "none";
+    document.getElementById("chatSection").style.display = "block";
+    document.getElementById("welcomeText").innerText = "Welcome " + currentUser + " 💖";
+
+    loadMessages();
+}
+
+function sendMessage() {
+    const input = document.getElementById("messageInput");
+    const msg = input.value.trim();
+    if (msg === "") return;
+
+    db.ref("privateChat").push({
+        user: currentUser,
+        text: msg,
+        time: Date.now()
+    });
+
+    input.value = "";
+}
+
+document.addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+        sendMessage();
+    }
+});
+
+function loadMessages() {
+    db.ref("privateChat").limitToLast(200).on("child_added", snapshot => {
+        const data = snapshot.val();
+        const msgDiv = document.createElement("div");
+        msgDiv.classList.add("message");
+
+        if (data.user === currentUser) {
+            msgDiv.classList.add("mine");
+        } else {
+            msgDiv.classList.add("other");
+        }
+
+        msgDiv.innerText = data.text;
+        document.getElementById("chatBox").appendChild(msgDiv);
+        document.getElementById("chatBox").scrollTop = 999999;
+    });
+}
+</script>
+
+</body>
+</html>
+
